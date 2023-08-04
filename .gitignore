@@ -1,7 +1,10 @@
-statistics
+models
 datasets
 weights_
 .ipynb_checkpoints
 __pycache__
 weight_checkpoint*
 .DS_Store
+*.pkl
+*.csv
+*.xlsx
