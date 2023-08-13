@@ -10,7 +10,7 @@ The Datasets:
 * GBSG
 * FLCHAIN
 * NWTCO
-* Prostate Survival
+* ProstateSurvival
 * Hepatocellular
 
 
