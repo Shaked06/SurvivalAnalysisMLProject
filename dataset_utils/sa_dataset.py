@@ -55,9 +55,9 @@ class SADataset(object):
             df.to_csv(full_dataset_path, index=False)
 
             train_df.to_csv(train_dataset_path, index=False)
-            log(f"TRAIN Dataset {self.dataset_name}, {df.shape[0]} samples", 1)
+            log(f"TRAIN Dataset {self.dataset_name}, {train_df.shape[0]} samples", 1)
             test_df.to_csv(test_dataset_path, index=False)
-            log(f"TEST Dataset {self.dataset_name}, {df.shape[0]} samples", 1)
+            log(f"TEST Dataset {self.dataset_name}, {test_df.shape[0]} samples", 1)
 
         if train:
             df = pd.read_csv(train_dataset_path)
@@ -88,23 +88,35 @@ class SADataset(object):
         if len(names_to_install) > 0:
             utils.install_packages(StrVector(names_to_install))
             log(f"DOWNLOAD {names_to_install} (R PACKAGES)", 1)
+        
+        if self.dataset_name == "prostateSurvival":
+            robjects.r("df <- asaur::prostateSurvival")
 
-        robjects.r("df <- asaur::prostateSurvival")
+            with (robjects.default_converter + pandas2ri.converter).context():
+                df = robjects.conversion.get_conversion().rpy2py(
+                    robjects.r["df"])
+            # special preprocessing for prostateSurvival dataset
+            df["grade"] = df["grade"].map({"mode": 1, "poor": 0})
+            df["stage"] = df["stage"].map({"T1ab": 1, "T1c": 2, "T2": 3})
+            df["ageGroup"] = df["ageGroup"].map(
+                {"66-69": 1, "70-74": 2, "75-79": 3, "80+": 4})
+            df = df[df["status"] != 2]
 
-        with (robjects.default_converter + pandas2ri.converter).context():
-            df = robjects.conversion.get_conversion().rpy2py(
-                robjects.r["df"])
+            feature_cols = df.drop(["status", "survTime"], axis=1).columns
+            df[feature_cols] = df[feature_cols].astype('float32')
+            
+        if self.dataset_name == "hepatoCellular":
+            robjects.r("df <- asaur::hepatoCellular")
 
-        # special preprocessing for prostateSurvival dataset
-        # df = pd.get_dummies(df, drop_first=False)
-        df["grade"] = df["grade"].map({"mode": 1, "poor": 0})
-        df["stage"] = df["stage"].map({"T1ab": 1, "T1c": 2, "T2": 3})
-        df["ageGroup"] = df["ageGroup"].map(
-            {"66-69": 1, "70-74": 2, "75-79": 3, "80+": 4})
-        df = df[df["status"] != 2]
+            with (robjects.default_converter + pandas2ri.converter).context():
+                df = robjects.conversion.get_conversion().rpy2py(
+                    robjects.r["df"])
+                
+            df.drop(["Number", "RFS", "Recurrence"], axis=1, inplace=True)
 
-        feature_cols = df.drop(["status", "survTime"], axis=1).columns
-        df[feature_cols] = df[feature_cols].astype('float32')
+            # imputation using mean value
+            df.fillna(value=df.mean(), inplace=True)
+                
         return df
 
     @classmethod

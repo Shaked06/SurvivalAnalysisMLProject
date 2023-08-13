@@ -1,12 +1,12 @@
 from pycox.datasets import metabric, gbsg, flchain, nwtco, support, kkbox
 
 DATASETS = ['FLCHAIN', 'GBSG', 'METABRIC', 'NWTCO',
-            'NWTCO', 'SUPPORT', 'KKBOX', 'prostateSurvival']
+            'NWTCO', 'SUPPORT', 'KKBOX', 'prostateSurvival', 'hepatoCellular']
 
 PYCOX_DATASETS = ['FLCHAIN', 'GBSG', 'METABRIC', 'NWTCO',
                   'NWTCO', 'SUPPORT', 'KKBOX']
 
-ASAUR_DATASETS = ['prostateSurvival']
+ASAUR_DATASETS = ['prostateSurvival', 'hepatoCellular']
 
 PYCOX_DATASET_TO_FUNC = {'FLCHAIN': flchain,
                          'GBSG': gbsg,
@@ -22,7 +22,8 @@ DATASET_TARGET_DECODER = {'FLCHAIN': ("futime", "death"),
                           'NWTCO': ("edrel", "rel"),
                           'SUPPORT': ("duration", "event"),
                           'KKBOX': ("duration", "event"),
-                          'prostateSurvival': ("survTime", "status")}
+                          'prostateSurvival': ("survTime", "status"),
+                          'hepatoCellular': ("OS", "Death")}
 
 DATASET_BINARY_COLS = {'FLCHAIN': ["sex", "sample.yr", "flc.grp", "mgus"],
                        'GBSG': ["x0", "x1", "x2"],
@@ -32,7 +33,11 @@ DATASET_BINARY_COLS = {'FLCHAIN': ["sex", "sample.yr", "flc.grp", "mgus"],
                        'KKBOX': ["n_prev_churns", "payment_method_id", "is_auto_renew",
                                  "is_cancel", "age_at_start", "strange_age", "nan_days_since_reg_init",
                                  "no_prev_churns"],
-                       'prostateSurvival': ["grade_mode"]
+                       'prostateSurvival': ["grade_mode"],
+                       'hepatoCellular': ["Gender", "HBsAg", "Cirrhosis", "ALT", "AST", "AFP", 
+                                          "Tumorsize", "Tumordifferentiation", "Vascularinvasion", 
+                                          "Tumormultiplicity", "Capsulation", "TNM", "BCLC"]
+
                        }
 NUM_FEATURES_PER_DATASET = {'FLCHAIN': 8,
                             'GBSG': 7,
@@ -40,4 +45,6 @@ NUM_FEATURES_PER_DATASET = {'FLCHAIN': 8,
                             'NWTCO': 6,
                             'SUPPORT': 14,
                             'KKBOX': 13,
-                            'prostateSurvival': 3}
+                            'prostateSurvival': 3,
+                            'hepatoCellular': 43
+                           }
