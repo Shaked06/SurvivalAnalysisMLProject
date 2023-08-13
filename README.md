@@ -1,5 +1,5 @@
 # Survival Analysis ML Project #
-## A Final Project for the Course: 3654-3201 Survival Analysis and ML Methods, Tel Aviv University. ##
+## Final Project for the Course 3654-3201: Survival Analysis and ML Methods, Tel Aviv University. ##
 
 ## Survival Analysis: Deep Learning Is Not All You Need ##
 This project involved conducting a series of experiments using known benchmarks and newer datasets.
